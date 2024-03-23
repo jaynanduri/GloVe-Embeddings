@@ -65,16 +65,15 @@ with torch.no_grad():
         total_correct += (predicted == y_batch).sum().item()
 print(f'Accuracy: {100 * total_correct / total}%')
 
-# saving updated embeddings to file
+
 model.eval()  # Set the model to evaluation mode.
 embeddings_list = []
 labels_list = []
 
-with torch.no_grad():  # No need to track gradients
+with torch.no_grad():  
     for texts, labels in test_loader:
-        # Assuming texts are already in the correct tensor form (indices)
-        embeddings = model.embedding(texts)  # Get the embeddings
-        averaged_embeddings = embeddings.mean(dim=1)  # Average across the sequence
+        embeddings = model.embedding(texts)  
+        averaged_embeddings = embeddings.mean(dim=1)
         embeddings_list.append(averaged_embeddings.cpu().numpy())
         labels_list.append(labels.cpu().numpy())
 
@@ -89,7 +88,6 @@ embeddings = tsne.fit_transform(all_embeddings)
 
 def plot_embeddings(embeddings_2d: torch.Tensor, y: np.ndarray) -> None:
     plt.figure(figsize=(10, 8))
-    # If y is not numeric, convert it to numeric values using LabelEncoder
     if np.issubdtype(y.dtype, np.number):
         classes = y
     else:
